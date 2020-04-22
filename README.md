@@ -13,10 +13,12 @@ fees to retail investors.
 
 ```bash
 # using npm
-npm install --save degiro
+npm install --save degiroapi
+or
+cd degiroapi & npm link ../degiroapi
 
 # using yarn
-yarn add degiro
+yarn add degiroapi
 ```
 
 ## Examples
@@ -24,7 +26,7 @@ yarn add degiro
 ### create
 
 ```javascript
-const DeGiro = require('degiro');
+const DeGiro = require('degiroapi');
 const degiro = DeGiro.create({username: 'johndoe', password: '1234'});
 ```
 
@@ -34,7 +36,7 @@ You can also provide your user and pass via environment variables:
 // run as:
 // DEGIRO_USER=johndoe DEGIRO_PASS=1234 node app.js
 
-const DeGiro = require('degiro');
+const DeGiro = require('degiroapi');
 // now you don't need to provide your credentials
 const degiro = DeGiro.create();
 ```
@@ -51,7 +53,7 @@ degiro.login().then(session => console.log(session));
 Two factor authentication is also supported. Pass the 2fa token through javascript or as an environment variable.
 
 ```javascript
-const DeGiro = require('degiro');
+const DeGiro = require('degiroapi');
 // alternatively run as:
 // DEGIRO_USER=johndoe DEGIRO_PASS=1234 DEGIRO_ONE_TIME_PASS=123456 node app.js
 const degiro = DeGiro.create({username: 'johndoe', password: '1234', oneTimePassword: '123456'});
