@@ -10,7 +10,7 @@
     "prettier": "prettier --write --no-bracket-spacing --trailing-comma es5 --single-quote --list-different --tab-width 4 --print-width 120 ./src/**/*.js"
   },
   "dependencies": {
-    "cookie": "^0.3.1",
+    "cookie": "^0.4.1",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0"
   },

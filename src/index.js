@@ -84,8 +84,7 @@ const create = ({
      * @return {Promise}
      */
     const requestVwdSession = () => {
-        const url = `https://degiro.quotecast.vwdservices.com/CORS/request_session?
-                     version=1.0.20170315&userToken=${session.userToken}`
+        const url = `https://degiro.quotecast.vwdservices.com/CORS/request_session?version=1.0.20170315&userToken=${session.userToken}`
         const method = 'POST'
         const headers = {Origin: 'https://trader.degiro.nl'}
         const body = JSON.stringify({referrer: 'https://trader.degiro.nl'})
@@ -159,7 +158,11 @@ const create = ({
             const method = 'POST'
             const headers = {Origin: 'https://trader.degiro.nl'}
             const body = JSON.stringify({
-                controlData: `req(${issueId}.BidPrice);req(${issueId}.AskPrice);req(${issueId}.LastPrice);req(${issueId}.LastTime);`,
+                controlData: `req(${issueId}.BidPrice);req(${issueId}.AskPrice);req(${
+                                    issueId
+                                  }.LastPrice);req(${
+                                    issueId
+                                  }.LastTime);`,
             })
             log('getAskBidPrice url:', url);
             log('getAskBidPrice header:', JSON.stringify(headers));
@@ -284,13 +287,13 @@ const create = ({
     const updateConfig = () => {
         const url = `${BASE_TRADER_URL}/login/secure/config`
         const headers = {headers: {Cookie: `JSESSIONID=${session.id};`}}
-        log('config url:', url);
+        log('config url: GET', url);
         log('config headers:', JSON.stringify(headers));
 
         return fetch(url, headers)
         .then(res => res.json())
         .then(res => {
-            log('config response: GET', JSON.stringify(res));
+            log('config response:', JSON.stringify(res));
             urls.paUrl = res.data.paUrl;
             urls.productSearchUrl = res.data.productSearchUrl;
             urls.productTypesUrl = res.data.productTypesUrl;
@@ -380,15 +383,19 @@ const create = ({
             offset,
         };
         const params = querystring.stringify(omitBy(options, isNil));
-        const url = `${urls.productSearchUrl}v5/products/lookup?
-                        intAccount=${session.account}&
-                        sessionId=${session.id}&
-                        ${params}`
+        const url = `${urls.productSearchUrl}v5/products/lookup?intAccount=${
+                          session.account
+                        }&sessionId=${
+                          session.id
+                        }&${params}`
         log('searchProduct url: GET', url);
 
         return fetch(url)
                .then(res => res.json())
-               .then(productInfo => log('searchProduct response:', JSON.stringify(productInfo)));
+               .then(productInfo => {
+                    log('searchProduct response:', JSON.stringify(productInfo));
+                    return productInfo;
+               });
     };
 
     /**
@@ -399,8 +406,12 @@ const create = ({
      */
     const deleteOrder = orderId => {
         const method = 'DELETE'
-        const url = `${urls.tradingUrl}v5/order/${orderId};jsessionid=${session.id}?
-                       intAccount=${session.account}&sessionId=${session.id}`
+        const url = `${urls.tradingUrl}v5/order/${orderId};jsessionid=${
+                          session.id
+                        }?intAccount=${
+                          session.account
+                        }&sessionId=${
+                          session.id}`
         const headers = {'Content-Type': 'application/json;charset=UTF-8'}
         log('deleteOrder url:', method, url);
         log('deleteOrder headers:', JSON.stringify(headers));
@@ -436,8 +447,11 @@ const create = ({
      */
     const checkOrder = order => {
         const {buySell, orderType, productId, size, timeType, price, stopPrice} = order;
-        const url = `${urls.tradingUrl}v5/checkOrder;jsessionid=${session.id}?
-                       intAccount=${session.account}&sessionId=${session.id}`
+        const url = `${urls.tradingUrl}v5/checkOrder;jsessionid=${
+                          session.id
+                        }?intAccount=${
+                          session.account
+                        }&sessionId=${session.id}`
         const method = 'POST'
         const headers = {'Content-Type': 'application/json;charset=UTF-8'}
         log('checkOrder url:', method, url);
@@ -464,8 +478,11 @@ const create = ({
      */
     const confirmOrder = ({order, confirmationId}) => {
         const {buySell, orderType, productId, size, timeType, price, stopPrice} = order;
-        const url = `${urls.tradingUrl}v5/order/${confirmationId};jsessionid=${session.id}?
-                       intAccount=${session.account}&sessionId=${session.id}`
+        const url = `${urls.tradingUrl}v5/order/${confirmationId};jsessionid=${
+                          session.id
+                        }?intAccount=${
+                          session.account
+                        }&sessionId=${session.id}`
         const method = 'POST'
         const headers = {'Content-Type': 'application/json;charset=UTF-8'}
         log('confirmOrder url:', method, url);
@@ -507,8 +524,10 @@ const create = ({
             ids = [ids];
         }
         
-        const url = `${urls.productSearchUrl}v5/products/info?intAccount=${session.account}&
-                       sessionId=${session.id}`
+        const url = `${urls.productSearchUrl}v5/products/info?intAccount=${
+                          session.account
+                        }&sessionId=${
+                          session.id}`
         const method = 'POST'
         const headers = {'Content-Type': 'application/json'}
         const body = JSON.stringify(ids.map(id => id.toString()))
