@@ -44,9 +44,9 @@ const create = ({
 
         if (!res.ok) {
             if ('errors' in json) {
-                throw Error(json.errors[0].text);
+                throw Error('Business: ' + json.errors[0].text);
             } else {
-                throw Error(res.status + ' - ' + res.statusText);
+                throw Error('Technical: ' + res.status + ' - ' + res.statusText);
             }
         }
         return json
@@ -290,7 +290,7 @@ const create = ({
      * @return {Promise}
      */
     const getOrdersHistory = (fromDate, toDate) => {
-        const url = `${urls.reportingUrl}v4/order-history?intAccount=${
+        const url = `${urls.reportingUrl}v6/order-history?intAccount=${
                           session.account
                         }&fromDate=${
                           fromDate
@@ -311,7 +311,7 @@ const create = ({
      * @return {Promise}
      */
     const getTransactions = (fromDate, toDate, groupByOrder) => {
-        const url = `${urls.reportingUrl}v4/transactions?intAccount=${
+        const url = `${urls.reportingUrl}v6/transactions?intAccount=${
                           session.account
                         }&fromDate=${
                           fromDate
@@ -326,6 +326,27 @@ const create = ({
         .then(res => res.json().then(json => (checkSuccess(res, json, 'getTransactions'))));
     };
 
+
+    /**
+     * Get portfolio movements (dividends, deposits, withdrawal, completed orders)
+     * Include the getTransactions info plus the dividends, deposits and withdrawals
+     * date format: dd/MM/YYYY
+     *
+     * @return {Promise}
+     */
+    const getPortfolioMovements = (fromDate, toDate) => {
+        const url = `${urls.reportingUrl}v6/accountoverview?intAccount=${
+                          session.account
+                        }&fromDate=${
+                          fromDate
+                        }&toDate=${
+                          toDate
+                        }&sessionId=${session.id}`
+        log('getPortfolioMovements request url: GET', url);
+
+        return fetch(encodeURI(url))
+        .then(res => res.json().then(json => (checkSuccess(res, json, 'getPortfolioMovements'))));
+    };
 
     /**
      * Get client info
@@ -619,6 +640,7 @@ const create = ({
         getTasks,
         getOrdersHistory,
         getTransactions,
+        getPortfolioMovements,
         getProductsByIds,
         getClientInfo,
         updateConfig,
