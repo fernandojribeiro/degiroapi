@@ -437,21 +437,6 @@ const create = ({
             }
             log('login ok!');
         }))
-
-/*        .then(res => {
-              const cookies = parseCookies(res.headers.get('set-cookie') || '');
-              session.id = cookies.JSESSIONID;
-              log('login response status:', res.ok?'success':'error', '-', res.status, '-', res.statusText);
-              log('login response header:', JSON.stringify(headerToJSON(res.headers)));
-              log('login response body:', JSON.stringify(res));
-              log('sessionId:', session.id);
-
-              if (!session.id) {
-                  throw Error('login nok');
-              }
-              log('login ok!');
-
-        })*/
         .then(updateConfig)
         .then(getClientInfo)
         .then(() => session);
