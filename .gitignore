@@ -17,3 +17,4 @@ node_modules
 jspm_packages
 dist
 typings
+package-lock.json
